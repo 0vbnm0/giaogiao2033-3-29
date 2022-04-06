@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        
+        .box {
+            width: 350px;
+            height: 350px;
+            margin: 100px;
+            border: 1px solid #ccc;
+            position: relative;
+        }
+        
+        .sma {
+            width: 350px;
+            height: 350px;
+        }
+        
+        .big {
+            width: 400px;
+            height: 400px;
+            position: absolute;
+            top: 0;
+            left: 360px;
+            border: 1px solid #ccc;
+            overflow: hidden;
+            /* 切掉 */
+            display: none;
+        }
+        
+        .mask {
+            width: 150px;
+            height: 150px;
+            background: rgba(255, 255, 0, .4);
+            position: absolute;
+            top: 0;
+            left: 0;
+            cursor: move;
+            display: none;
+        }
+        
+        .small {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .big img {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box" id="fdj">
+        <!-- 小盒子 -->
+        <div class="small">
+            <img src="./imges/qqq.jpg" alt="" class="sma">
+            <div class="mask"></div>
+        </div>
+
+        <div class="big">
+            <img src="./imges/qqq.jpg" alt="">
+        </div>
+    </div>
+    <script src="./js/index.js"></script>
+    <script>
+        var fdj = document.getElementById("fdj");
+        var small = fdj.children[0];
+        var big = fdj.children[1];
+        var mask = small.children[1];
+        var bigImage = big.children[0];
+        small.onmouseover = function() {
+            mask.style.display = "block";
+            big.style.display = "block";
+        }
+        small.onmouseout = function() {
+            mask.style.display = "none";
+            big.style.display = "none";
+        }
+        var x = 0;
+        var y = 0;
+
+
+        small.onmousemove = function(event) {
+            var event = event || window.event;
+            x = event.clientX - this.offsetParent.offsetLeft - mask.offsetWidth / 2; //在某个盒子内的坐标
+            y = event.clientY - this.offsetParent.offsetTop - mask.offsetHeight / 2;
+
+            if (x < 0) {
+                x = 0;
+            } else if (x > small.offsetWidth - mask.offsetWidth) {
+                x = small.offsetWidth - mask.offsetWidth;
+            }
+            if (y < 0) {
+                y = 0;
+            } else if (y > small.offsetHeight - mask.offsetHeight) {
+                y = small.offsetHeight - mask.offsetHeight;
+            }
+
+            mask.style.left = x + "px";
+            mask.style.top = y + "px";
+
+            var maxX = bigImage.offsetWidth - big.offsetWidth;
+            var maxY = bigImage.offsetHeight - big.offsetHeight;
+
+
+            bigImage.style.left = -x * maxX / (small.offsetWidth - mask.offsetWidth) + "px";
+            bigImage.style.top = -y * maxX / (small.offsetWidth - mask.offsetWidth) + "px";
+        }
+    </script>
+</body>
+
+</html>
